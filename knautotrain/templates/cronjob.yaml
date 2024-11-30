@@ -1,0 +1,58 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: stop-{{ .Values.app.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  schedule: {{ .Values.cronjob.stop.schedule | quote }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: kubectl
+            image: bitnami/kubectl
+            command:
+            - /bin/sh
+            - -c
+            - kubectl scale deployment {{ .Values.app.name }}-app --replicas=0 --namespace={{ .Values.namespace }}
+            volumeMounts:
+            - name: kube-config-volume
+              mountPath: /.kube/config
+              readOnly: false
+          volumes:
+          - name: kube-config-volume
+            hostPath:
+              path: {{ .Values.cronjob.stop.kubeconfig }}
+              type: File
+
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: start-{{ .Values.app.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  schedule: {{ .Values.cronjob.start.schedule | quote }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: kubectl
+            image: bitnami/kubectl
+            command:
+            - /bin/sh
+            - -c
+            - kubectl scale deployment {{ .Values.app.name }}-app --replicas=1 --namespace={{ .Values.namespace }}
+            volumeMounts:
+            - name: kube-config-volume
+              mountPath: /.kube/config
+              readOnly: false
+          volumes:
+          - name: kube-config-volume
+            hostPath:
+              path: {{ .Values.cronjob.start.kubeconfig }}
+              type: File 

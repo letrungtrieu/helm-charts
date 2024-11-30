@@ -1,0 +1,14 @@
+Ứng dụng {{ .Chart.Name }} đã được cài đặt thành công.
+
+Để truy cập ứng dụng:
+  - Host: {{ .Values.ingress.host }}
+  - Basic Auth được bật: {{ .Values.ingress.basicAuth.enabled }}
+
+MongoDB:
+  - Service: mongodb-service:27017
+  - Username: {{ .Values.mongodb.credentials.username }}
+  - Password: {{ .Values.mongodb.credentials.password }}
+
+CronJob Schedule:
+  - Stop: {{ .Values.cronjob.stop.schedule }}
+  - Start: {{ .Values.cronjob.start.schedule }} 
