@@ -4,6 +4,8 @@ metadata:
   name: stop-{{ .Values.app.name }}
   namespace: {{ .Values.namespace }}
 spec:
+  # Cấu hình lịch chạy theo múi giờ UTC+7 (Vietnam)
+  timeZone: Asia/Ho_Chi_Minh
   schedule: {{ .Values.cronjob.stop.schedule | quote }}
   jobTemplate:
     spec:
@@ -34,6 +36,8 @@ metadata:
   name: start-{{ .Values.app.name }}
   namespace: {{ .Values.namespace }}
 spec:
+  # Cấu hình lịch chạy theo múi giờ UTC+7 (Vietnam) 
+  timeZone: Asia/Ho_Chi_Minh
   schedule: {{ .Values.cronjob.start.schedule | quote }}
   jobTemplate:
     spec:

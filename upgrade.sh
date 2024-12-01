@@ -1,0 +1,1 @@
+helm upgrade kntrain kntrain/knautotrain -f values.yaml -n kimloi
