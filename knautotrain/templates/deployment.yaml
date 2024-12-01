@@ -26,7 +26,7 @@ spec:
         imagePullPolicy: {{ .Values.app.image.pullPolicy }}
         ports:
         - containerPort: {{ .Values.app.service.targetPort }}
-        command: ['sh', '-c', 'ulimit -n 65535 && exec KnAutoTrain']
+        command: ['sh', '-c', 'ulimit -n 65535 && dotnet KnAutoTrain.dll']
         securityContext:
           privileged: true
         volumeMounts:
