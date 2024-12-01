@@ -26,6 +26,7 @@ spec:
         imagePullPolicy: {{ .Values.app.image.pullPolicy }}
         ports:
         - containerPort: {{ .Values.app.service.targetPort }}
+        command: ['sh', '-c', 'ulimit -n 65535']
         volumeMounts:
         - name: config-volume
           mountPath: /app/appsettings.json
