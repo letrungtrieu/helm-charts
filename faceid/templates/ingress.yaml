@@ -53,8 +53,6 @@ spec:
         - name: my-basic-auth
         {{- end }}
         - name: websocket-headers
-  tls:
-    secretName: traefik-tls
 
 ---
 apiVersion: networking.k8s.io/v1
