@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.app.name }}-app
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "faceid.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.app.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app.name }}
+    spec:
+      hostname: {{ .Values.app.name }}
+      containers:
+      - name: {{ .Values.app.name }}
+        image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"
+        imagePullPolicy: {{ .Values.app.image.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.app.service.targetPort }}
+        volumeMounts:
+        - name: config-volume
+          mountPath: /app/faceid.db
+      volumes:
+      - name: config-volume
+        hostPath:
+          path: {{ .Values.app.configPath }}
+          type: File
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.app.name }}-service
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    app: {{ .Values.app.name }}
+  ports:
+    - protocol: TCP
+      port: {{ .Values.app.service.port }}
+      targetPort: {{ .Values.app.service.targetPort }} 

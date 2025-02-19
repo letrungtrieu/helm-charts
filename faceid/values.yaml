@@ -1,0 +1,23 @@
+# Cấu hình chung
+namespace: trieule
+
+# Cấu hình ứng dụng chính
+app:
+  name: faceid
+  image:
+    repository: 
+    tag: dev
+    pullPolicy: Always
+  service:
+    port: 80
+    targetPort: 8080
+  configPath: 
+
+# Cấu hình Ingress
+ingress:
+  enabled: true
+  host:
+  basicAuth:
+    enabled: true
+    secret: my-basic-auth-secret
+    credentials: 

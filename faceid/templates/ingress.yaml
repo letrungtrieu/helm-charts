@@ -1,0 +1,63 @@
+{{- if .Values.ingress.basicAuth.enabled }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Values.ingress.basicAuth.secret }}
+  namespace: {{ .Values.namespace }}
+data:
+  users: |2
+    {{ .Values.ingress.basicAuth.credentials }}
+
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: my-basic-auth
+  namespace: {{ .Values.namespace }}
+spec:
+  basicAuth:
+    secret: {{ .Values.ingress.basicAuth.secret }}
+{{- end }}
+
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ .Values.app.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  entryPoints:
+    - web
+    - websecure
+  routes:
+    - match: PathPrefix(`/`)
+      kind: Rule
+      services:
+        - name: api@internal
+          kind: TraefikService
+      middlewares:
+        - name: my-basic-auth
+  tls:
+    secretName: traefik-tls
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Values.app.name }}-ingress
+  namespace: {{ .Values.namespace }}
+  annotations:
+    spec.ingressClassName: traefik
+    traefik.ingress.kubernetes.io/router.middlewares: {{ .Values.namespace }}-my-basic-auth@kubernetescrd
+spec:
+  rules:
+    - host: {{ .Values.ingress.host }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.app.name }}-service
+                port:
+                  number: {{ .Values.app.service.port }} 
