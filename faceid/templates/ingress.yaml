@@ -20,19 +20,6 @@ spec:
 {{- end }}
 
 ---
-# Middleware để đảm bảo header WebSocket được truyền đúng
-apiVersion: traefik.containo.us/v1alpha1
-kind: Middleware
-metadata:
-  name: websocket-headers
-  namespace: {{ .Values.namespace }}
-spec:
-  headers:
-    customRequestHeaders:
-      Upgrade: "websocket"
-      Connection: "Upgrade"
-
----
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
@@ -52,7 +39,6 @@ spec:
         {{- if .Values.ingress.basicAuth.enabled }}
         - name: my-basic-auth
         {{- end }}
-        - name: websocket-headers
 
 ---
 apiVersion: networking.k8s.io/v1
@@ -63,9 +49,8 @@ metadata:
   annotations:
     spec.ingressClassName: traefik
 {{- if .Values.ingress.basicAuth.enabled }}
-    traefik.ingress.kubernetes.io/router.middlewares: {{ .Values.namespace }}-my-basic-auth@kubernetescrd,{{ .Values.namespace }}-websocket-headers@kubernetescrd
+    traefik.ingress.kubernetes.io/router.middlewares: {{ .Values.namespace }}-my-basic-auth@kubernetescrd
 {{- end }}
-    traefik.ingress.kubernetes.io/router.middlewares: {{ .Values.namespace }}-websocket-headers@kubernetescrd
     traefik.ingress.kubernetes.io/router.entrypoints: web, websecure
 spec:
   rules:
