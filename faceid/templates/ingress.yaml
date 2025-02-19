@@ -48,7 +48,10 @@ metadata:
   namespace: {{ .Values.namespace }}
   annotations:
     spec.ingressClassName: traefik
+{{- if .Values.ingress.basicAuth.enabled }}
     traefik.ingress.kubernetes.io/router.middlewares: {{ .Values.namespace }}-my-basic-auth@kubernetescrd
+{{- end }}
+    traefik.ingress.kubernetes.io/router.entrypoints: web, websecure
 spec:
   rules:
     - host: {{ .Values.ingress.host }}

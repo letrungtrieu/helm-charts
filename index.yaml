@@ -3,9 +3,9 @@ entries:
   faceid:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2025-02-19T12:19:11.726317+07:00"
+    created: "2025-02-19T14:13:01.7091833+07:00"
     description: A Helm chart for FaceId application
-    digest: 95055310ae8fd9378019abd94fd7c53b8f3cba52b20ae9c8ef0bc0dde8ebe648
+    digest: 931dc08a551b4411a7db3272a41f01b090a425adce029f741ef3c063a5eefa32
     name: faceid
     type: application
     urls:
@@ -14,12 +14,12 @@ entries:
   knautotrain:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2025-02-19T12:19:11.7268324+07:00"
+    created: "2025-02-19T14:13:01.7096899+07:00"
     description: A Helm chart for KNAutoTrain application
-    digest: 9c7c54c46661aa0974ab4eb6f04699bdf45a6f52ed7d0c7f43f2bc2eafb60752
+    digest: 081749b13b0c3aba428942b2970245616d954ef3193141b2db5fc964b440ed15
     name: knautotrain
     type: application
     urls:
     - knautotrain-0.1.0.tgz
     version: 0.1.0
-generated: "2025-02-19T12:19:11.7258049+07:00"
+generated: "2025-02-19T14:13:01.7091833+07:00"
