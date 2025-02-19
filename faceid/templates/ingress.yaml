@@ -29,6 +29,7 @@ spec:
   entryPoints:
     - web
     - websecure
+    - extra
   routes:
     - match: PathPrefix(`/`)
       kind: Rule
