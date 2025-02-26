@@ -1,47 +1,3 @@
-{{- if .Values.ingress.basicAuth.enabled }}
-apiVersion: v1
-kind: Secret
-metadata:
-  name: {{ .Values.ingress.basicAuth.secret }}
-  namespace: {{ .Values.namespace }}
-data:
-  users: |2
-    {{ .Values.ingress.basicAuth.credentials }}
-
----
-apiVersion: traefik.containo.us/v1alpha1
-kind: Middleware
-metadata:
-  name: my-basic-auth
-  namespace: {{ .Values.namespace }}
-spec:
-  basicAuth:
-    secret: {{ .Values.ingress.basicAuth.secret }}
-{{- end }}
-
----
-apiVersion: traefik.containo.us/v1alpha1
-kind: IngressRoute
-metadata:
-  name: {{ .Values.app.name }}
-  namespace: {{ .Values.namespace }}
-spec:
-  entryPoints:
-    - web
-    - websecure
-    - extra
-  routes:
-    - match: PathPrefix(`/`)
-      kind: Rule
-      services:
-        - name: {{ .Values.app.name }}-service
-          port: {{ .Values.app.service.port }}
-      middlewares:
-        {{- if .Values.ingress.basicAuth.enabled }}
-        - name: my-basic-auth
-        {{- end }}
-
----
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -49,10 +5,7 @@ metadata:
   namespace: {{ .Values.namespace }}
   annotations:
     spec.ingressClassName: traefik
-{{- if .Values.ingress.basicAuth.enabled }}
-    traefik.ingress.kubernetes.io/router.middlewares: {{ .Values.namespace }}-my-basic-auth@kubernetescrd
-{{- end }}
-    traefik.ingress.kubernetes.io/router.entrypoints: web, websecure
+    traefik.ingress.kubernetes.io/router.entrypoints: "web,websecure"
 spec:
   rules:
     - host: {{ .Values.ingress.host }}
